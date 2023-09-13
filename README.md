@@ -148,3 +148,22 @@ ResponseEntity.ok()
 ```(MalformedURLException e)```
 
 - captura exceções do tipo MalformedURLException que podem ocorrer ao criar o objeto UrlResource;
+
+# listFiles
+
+<br>
+
+```
+List<String> fileNames = Files.list(fileStorageLocation)
+.map(Path::getFileName)
+.map(Path::toString)
+.collect(Collectors.toList());
+```
+
+- Files.list(fileStorageLocation): obtem um fluxo (Stream) de objetos Path que representam os arquivos e diretórios no diretório especificado (fileStorageLocation). 
+
+- .map(Path::getFileName): método map usado para transformar cada objeto Path do fluxo em seu nome de arquivo. O Path::getFileName é uma referência a um método que extrai o nome do arquivo de um objeto Path.
+
+- .map(Path::toString): aplica a transformação para cada nome de arquivo extraído no passo anterior, convertendo-os em strings.
+
+- .collect(Collectors.toList()): A função collect é usada para coletar os resultados do fluxo de nomes de arquivo transformados em uma lista (List<String>).
