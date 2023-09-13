@@ -11,8 +11,10 @@
 ## Anotações
 
 - @Configuration
-- @COnfigurationProperties
+- @ConfigurationProperties
 - @Controller
+- @GetMapping
+- @PathVariable
 - @PostMapping
 - @RequestParam
 - @RequestMapping
@@ -20,6 +22,10 @@
 <br>
 
 ## Métodos e funções utilizados:
+
+<br>
+
+# uploadFile
 
 <br>
 
@@ -73,3 +79,72 @@ String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 - .toUriString(): converte a URI construída em uma representação de string. O resultado é armazenado na variável fileDownloadUri;
 
 <br>
+
+# downloadFile
+
+<br>
+
+```@GetMapping("download/{fileName:.+}")```
+
+- ":.+": é uma expressão regular que garante que a variável {fileName} capture todo o nome do arquivo, incluindo a extensão;
+
+<br>
+
+```public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws IOException```
+
+- Aceita dois parâmetros: fileName, que é o nome do arquivo a ser baixado, e request, que é uma instância de HttpServletRequest usada para obter informações sobre a solicitação HTTP;
+
+<br>
+
+```Path filePath = fileStorageLocation.resolve(fileName).normalize()```
+
+- cria um objeto Path chamado filePath que representa o caminho completo do arquivo a ser baixado. 
+- resolve o caminho com base no diretório de armazenamento configurado anteriormente na classe e normaliza o caminho.
+
+<br>
+
+```Resource resource = new UrlResource(filePath.toUri())```
+
+- cri um objeto Resource (geralmente uma UrlResource) com base no caminho do arquivo. Isso é usado para acessar e servir o arquivo.
+
+<br>
+
+```String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath())```
+
+- obtém o tipo de conteúdo (MIME type) do arquivo com base no seu caminho absoluto. 
+- o tipo de conteúdo é usado para definir o cabeçalho Content-Type na resposta HTTP.
+
+<br>
+
+```if (contentType == null) contentType = "application/octet-stream"```
+
+- define um valor padrão "application/octet-stream". 
+- isso é comum para downloads de arquivos genéricos, quando o tipo de conteúdo não pode ser determinado com precisão.
+
+<br>
+
+```
+ResponseEntity.ok()
+.contentType(MediaType.parseMediaType(contentType))
+.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\""
++ resource.getFilename() + "\"")
+.body(resource)
+```
+
+- ResponseEntity.ok(): cria um objeto ResponseEntity com um status HTTP 200 (OK) [solicitação bem-sucedida]. A resposta conterá o arquivo para download.
+
+- .contentType(MediaType.parseMediaType(contentType)): é definido o cabeçalho Content-Type da resposta HTTP. O tipo de conteúdo (MIME type) do arquivo é especificado usando o valor contentType, que foi obtido anteriormente. Isso informa ao cliente qual é o tipo de conteúdo do arquivo sendo enviado. 
+
+- .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + resource.getFilename() + "\""): define o cabeçalho Content-Disposition. O valor "attachment" indica que o arquivo deve ser tratado como um anexo pelo navegador, o que normalmente resulta em uma caixa de diálogo de download sendo exibida para o usuário.
+
+- resource.getFilename(): obtém o nome do arquivo do objeto Resource que representa o arquivo a ser baixado. Esse nome é usado no cabeçalho Content-Disposition para sugerir um nome de arquivo para o download.
+
+- "attachment; fileName="" + resource.getFilename() + """: resulta em algo como "attachment; fileName="nome-do-arquivo.extensao"", onde "nome-do-arquivo.extensao" é o nome do arquivo real.
+
+- .body(resource): o corpo da resposta HTTP é definido como o recurso (Resource) que representa o arquivo a ser baixado. Significa que o conteúdo do arquivo em si será retornado como parte do corpo da resposta HTTP.
+
+<br>
+
+```(MalformedURLException e)```
+
+- captura exceções do tipo MalformedURLException que podem ocorrer ao criar o objeto UrlResource;
