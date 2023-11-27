@@ -12,14 +12,14 @@
 
 ## Anotações
 
-- @Configuration
-- @ConfigurationProperties
-- @Controller
-- @GetMapping
-- @PathVariable
-- @PostMapping
-- @RequestParam
-- @RequestMapping
+- [@Configuration](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@ConfigurationProperties](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@Controller](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@GetMapping](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@PathVariable](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@PostMapping](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@RequestParam](https://github.com/lucarauj/Anotacoes-Spring-Framework)
+- [@RequestMapping](https://github.com/lucarauj/Anotacoes-Spring-Framework)
 
 <br>
 
